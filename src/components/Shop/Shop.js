@@ -1,21 +1,28 @@
 import React, { useEffect, useState } from 'react';
-import { addToDb, getStoreCart } from '../../utilities/fakedb';
+import { Link, useLoaderData } from 'react-router-dom';
+import { addToDb, deleteShoppingCart, getStoreCart } from '../../utilities/fakedb';
 import Cart from '../Cart/Cart';
 import Product from '../Product/Product';
 import './Shop.css'
 
 const Shop = () => {
+    const products = useLoaderData();
 
-    const [products, setProducts] = useState([]);
+    // const [products, setProducts] = useState([]);
 
     // useState for event handler 
     const [cart, setCart] = useState([]);
 
-    useEffect(() => {
-        fetch('products.json')
-            .then(res => res.json())
-            .then(data => setProducts(data))
-    }, []);
+    const clearCart = () => {
+        setCart([]);
+        deleteShoppingCart();
+    }
+
+    // useEffect(() => {
+    //     fetch('products.json')
+    //         .then(res => res.json())
+    //         .then(data => setProducts(data))
+    // }, []);
 
 
     // for load data form localStorage and set data from local storage
@@ -84,7 +91,11 @@ const Shop = () => {
                 }
             </div>
             <div className="cart-container">
-                <Cart cart={cart}></Cart>
+                <Cart cart={cart} clearCart={clearCart}>
+                    <Link to='/orders'>
+                        <button>Review order</button>
+                    </Link>
+                </Cart>
             </div>
         </div >
     );
